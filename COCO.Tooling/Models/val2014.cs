@@ -6,10 +6,10 @@ namespace COCO.Tooling.Models
 {
     public class val2014
     {
-       public List<Info> info { get; set; }
-       public List<Image> images { get; set; }
-       public List<License> licenses { get; set; }
-       public List<Annotation> annotations { get; set; }
+       public Info info { get; set; }
+       public Image[] images { get; set; }
+       public License[] licenses { get; set; }
+       public Annotation[] annotations { get; set; }
     }
 
     public class Info 
@@ -41,7 +41,7 @@ namespace COCO.Tooling.Models
     }
     public class Annotation 
     {
-        public string image_id { get; set; }
+        public int image_id { get; set; }
         public int id { get; set; }
         public string caption { get; set; }
     }

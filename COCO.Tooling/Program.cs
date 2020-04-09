@@ -1,6 +1,9 @@
-﻿using System;
+﻿using COCO.Tooling.Models;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace COCO.Tooling
 {
@@ -13,7 +16,21 @@ namespace COCO.Tooling
 
         private Program()
         {
+            var imageLocation = @"";
+            var valLocation = @"";
 
+            var images = LoadImagesIntoList(imageLocation);
+            var selectedImages = SelectRandomImages(images, 20);
+
+            var json = File.ReadAllText(valLocation);
+            var valData = JsonConvert.DeserializeObject<val2014>(json);
+
+
+            foreach (var image in selectedImages)
+            {
+                Console.Write($"{image.Name}: ");
+                Console.WriteLine(GetCaptionFromImage(image, valData));
+            }            
         }
 
         private List<FileInfo> LoadImagesIntoList(string location)
@@ -39,11 +56,11 @@ namespace COCO.Tooling
             return randomImages;
         }
 
-        private string GetCaptionFromImage(FileInfo image, string JsonFileLocation)
+        private string GetCaptionFromImage(FileInfo image, val2014 valData)
         {
-
-
-            return string.Empty;
+            var fileName = image.Name;
+            var id = valData.images.Single(s => s.file_name == fileName).id;
+            return valData.annotations.First(s => s.image_id == id).caption;
         }
     }
 }

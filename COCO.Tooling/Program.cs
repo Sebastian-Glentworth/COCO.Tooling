@@ -18,19 +18,15 @@ namespace COCO.Tooling
         {
             var imageLocation = @"";
             var valLocation = @"";
+            var outputLocation = @"";
 
             var images = LoadImagesIntoList(imageLocation);
-            var selectedImages = SelectRandomImages(images, 20);
 
             var json = File.ReadAllText(valLocation);
             var valData = JsonConvert.DeserializeObject<val2014>(json);
 
 
-            foreach (var image in selectedImages)
-            {
-                Console.Write($"{image.Name}: ");
-                Console.WriteLine(GetCaptionFromImage(image, valData));
-            }            
+            
         }
 
         private List<FileInfo> LoadImagesIntoList(string location)
@@ -61,6 +57,14 @@ namespace COCO.Tooling
             var fileName = image.Name;
             var id = valData.images.Single(s => s.file_name == fileName).id;
             return valData.annotations.First(s => s.image_id == id).caption;
+        }
+
+        private void CopyFilesToNewLocation(List<FileInfo> filesToCopy, string newLocation)
+        {
+            foreach (var file in filesToCopy)
+            {
+                file.CopyTo($@"{newLocation}/{file.Name}");
+            }
         }
     }
 }

@@ -17,16 +17,20 @@ namespace COCO.Tooling
         private Program()
         {
             var imageLocation = @"";
-            var valLocation = @"";
+            var captionsVal2014Location = @"";
+            var instancesVal2014Location = @"";
             var outputLocation = @"";
 
             var images = LoadImagesIntoList(imageLocation);
 
-            var json = File.ReadAllText(valLocation);
-            var valData = JsonConvert.DeserializeObject<val2014>(json);
+            var json = File.ReadAllText(instancesVal2014Location);
+            var valData = JsonConvert.DeserializeObject<InstancesVal2014>(json);
 
 
-            
+            foreach (var item in valData.categories)
+            {
+                Console.WriteLine(item);
+            }
         }
 
         private List<FileInfo> LoadImagesIntoList(string location)
@@ -52,7 +56,7 @@ namespace COCO.Tooling
             return randomImages;
         }
 
-        private string GetCaptionFromImage(FileInfo image, val2014 valData)
+        private string GetCaptionFromImage(FileInfo image, CaptionsVal2014 valData)
         {
             var fileName = image.Name;
             var id = valData.images.Single(s => s.file_name == fileName).id;

@@ -1,35 +1,31 @@
 ﻿using COCO.Tooling.Models;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace COCO.Tooling
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static async Task Main(string[] args)
         {
-            new Program();
+            await Run();
         }
 
-        private Program()
+        private static async Task Run()
         {
-            var imageLocation = @"";
-            var captionsVal2014Location = @"";
-            var instancesVal2014Location = @"";
-            var outputLocation = @"";
-
-            var images = LoadImagesIntoList(imageLocation);
-
-            var json = File.ReadAllText(instancesVal2014Location);
-            var valData = JsonConvert.DeserializeObject<InstancesVal2014>(json);
-
-
-            foreach (var item in valData.categories)
+            var instancesVal2014Location = @"C:\Users\glentworths\Downloads\Telegram Desktop\instances_val2014.json";
+            using (var fs = File.OpenRead(instancesVal2014Location))
             {
-                Console.WriteLine(item);
+                var valData = await JsonSerializer.DeserializeAsync<InstancesVal2014>(fs);
+
+                foreach (var item in valData.categories)
+                {
+                    Console.WriteLine(item);
+                }
             }
         }
 
@@ -45,7 +41,7 @@ namespace COCO.Tooling
         {
             var randomImages = new List<FileInfo>();
 
-            for(int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
                 Random rnd = new Random();
                 int index = rnd.Next(0, dataset.Count);
